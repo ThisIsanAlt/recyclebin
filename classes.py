@@ -27,3 +27,7 @@ class Bus():
 cat = Animal(5, 30, 'kitty', 'grey')
 cat.ageTimeHeight
 cat.getDescription
+
+ttcbus = Bus('two-sector', 3, 20, 'yrt')
+ttcbus.getMaxPeople
+ttcbus.setbusAgency('ttc')
