@@ -30,5 +30,5 @@ if goes_first == 'n':
                 break
         user_input=input(f'Which grid would you like to place your mark?\n{grid}')
         for i in compute_list:
-            if user_input = i:
+            if user_input == i:
                 i='X'
