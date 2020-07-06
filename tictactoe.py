@@ -1,34 +1,49 @@
-a='a'
-b='b'
-c='c'
-d='d'
-e='e'
-f='f'
-g='g'
-h='h'
-i='i'
-grid = f'''|{a}|{b}|{c}|
-|{d}|{e}|{f}|
-|{g}|{h}|{i}|'''
 
-goes_first=input('Would you like to go first? y/n')
-condition1 = a == b and b == c
-condition2 = d == e and e == f
-condition3 = g == h and h == i
-condition4 = a == d and d == g
-condition5 = b == e and e == h
-condition6 = c == f and f == i
-condition7 = a == e and e == i
-condition8 = c == e and e == g
-conditionlist = {condition1, condition2, condition3, condition4, condition5, condition6, condition7, condition8}
-if goes_first == 'n':
-    while not condition1 or condition2 or condition3 or condition4 or condition5 or condition6 or condition7 or condition8:
-        compute_list={i,h,g,f,e,d,c,b,a}
-        for i in compute_list:
-            if i != 'O' or i != 'X':
-                i = 'O'
-                break
-        user_input=input(f'Which grid would you like to place your mark?\n{grid}')
-        for i in compute_list:
-            if user_input == i:
-                i='X'
+def printboard(board):
+    print(f'''|{board[0]}|{board[1]}|{board[2]}|
+|{board[3]}|{board[4]}|{board[5]}|
+|{board[6]}|{board[7]}|{board[8]}|''')
+
+def countempty(board):
+    emptylist = []
+    for i in board:
+        if i == ' ':
+            emptylist.append(i)
+    return emptylist
+
+def insertpiece(board, location, symbol):
+    board[location]=symbol
+    return board
+
+def playermove(board):
+    location = int(input('Where do you want to place your symbol?'))-1
+    if board[location] == ' ':
+        insertpiece(board, location, 'X')
+    else:
+        playermove(board)
+    printboard(board)
+
+def computermove(board):
+    for i in [8,7,6,5,4,3,2,1,0]:
+        if board[i] == ' ':
+            insertpiece(board, i, 'O')
+            break
+    printboard(board)
+
+def main():
+    board=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
+    goes_first=input('Would you like to go first? y/n').lower()
+    if goes_first=='n':
+        while len(countempty(board)) > 0:
+            computermove(board)
+            playermove(board)
+        main()
+    elif goes_first=='y':
+        while len(countempty(board)) > 0:
+            playermove(board)
+            computermove(board)
+        main()
+    else:
+        pass
+
+main()
