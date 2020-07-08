@@ -20,15 +20,25 @@ def playermove(board):
     if board[location] == ' ':
         insertpiece(board, location, 'X')
     else:
+        print('That\'s not a valid move! Try again!')
         playermove(board)
-    printboard(board)
 
 def computermove(board):
     for i in [8,7,6,5,4,3,2,1,0]:
         if board[i] == ' ':
             insertpiece(board, i, 'O')
             break
-    printboard(board)
+
+def windetected(symbol, board):
+    if board[0] == board[1] and board[1] == board[2] and board[0] == symbol: return True
+    elif board[3] == board[4] and board[4] == board[5] and board[3] == symbol: return True
+    elif board[6] == board[7] and board[7] == board[8] and board[6] == symbol: return True
+    elif board[0] == board[4] and board[4] == board[8] and board[0] == symbol: return True
+    elif board[2] == board[4] and board[4] == board[6] and board[2] == symbol: return True
+    elif board[0] == board[3] and board[3] == board[6] and board[0] == symbol: return True
+    elif board[1] == board[4] and board[4] == board[7] and board[1] == symbol: return True
+    elif board[2] == board[5] and board[5] == board[8] and board[2] == symbol: return True
+    else: return False
 
 def main():
     board=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
@@ -37,13 +47,32 @@ def main():
         while len(countempty(board)) > 0:
             computermove(board)
             playermove(board)
+            printboard(board)
+            if windetected('X', board): 
+                print('You win!')
+                main()
+            elif windetected('O', board):
+                print('Computer wins!')
+                main()
+            else:
+                continue
         main()
     elif goes_first=='y':
         while len(countempty(board)) > 0:
             playermove(board)
             computermove(board)
+            printboard(board)
+            if windetected('X', board): 
+                print('You win!')
+                main()
+            elif windetected('O', board):
+                print('Computer wins!')
+                main()
+            else:
+                continue
         main()
     else:
         pass
 
-main()
+if __name__ == '__main__':
+    main()
