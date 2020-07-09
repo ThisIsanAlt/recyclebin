@@ -46,28 +46,32 @@ def main():
     if goes_first=='n':
         while len(countempty(board)) > 0:
             computermove(board)
+            if windetected('O', board):
+                print('Computer wins!')
+                main()
+            printboard(board)
             playermove(board)
             printboard(board)
             if windetected('X', board): 
                 print('You win!')
                 main()
-            elif windetected('O', board):
-                print('Computer wins!')
-                main()
+                goes_first-' '
             else:
                 continue
         main()
     elif goes_first=='y':
         while len(countempty(board)) > 0:
             playermove(board)
-            computermove(board)
-            printboard(board)
-            if windetected('X', board): 
+            printboard
+            if windetected('X', board):
                 print('You win!')
                 main()
-            elif windetected('O', board):
+            computermove(board)
+            
+            if windetected('O', board): 
                 print('Computer wins!')
                 main()
+                goes_first=' '
             else:
                 continue
         main()
