@@ -89,6 +89,7 @@ def main():
                 else:
                     continue
         else:
+            clean()
             sys.exit()
 
 if __name__ == '__main__':
