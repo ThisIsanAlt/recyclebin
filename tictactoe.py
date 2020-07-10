@@ -1,4 +1,12 @@
 import sys
+import time
+import platform
+from os import system
+
+def clean():
+    os_name = platform.system().lower()
+    if 'windows' in os_name:
+        system('cls')
 
 def printboard(board):
     print(f'''|{board[0]}|{board[1]}|{board[2]}|
@@ -42,6 +50,9 @@ def windetected(symbol, board):
     else: return False
 
 def main():
+    print('Use your number pad to move like this:')
+    printboard(['01','02','03','04','05','06','07','08','09'])
+    print('To quit, just leave the input field empty when the program asks you who will go first.')
     board=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
     goes_first=input('Would you like to go first? y/n').lower()
     if goes_first=='n':
@@ -49,31 +60,35 @@ def main():
             computermove(board)
             if windetected('O', board):
                 print('Computer wins!')
-                goes_first=' '
+                time.sleep(5)
+                clean()
                 main()
             printboard(board)
             playermove(board)
-            printboard(board)
             if windetected('X', board): 
+                printboard(board)
                 print('You win!')
-                goes_first=' '
+                time.sleep(5)
+                clean()
                 main()
             else:
                 continue
         main()
     elif goes_first=='y':
         while len(countempty(board)) > 0:
-            playermove(board)
-            printboard(board)
+            playermove(board)            
             if windetected('X', board):
+                printboard(board)
                 print('You win!')
-                goes_first=' '
+                time.sleep(5)
+                clean()
                 main()
             computermove(board)
             printboard(board)
             if windetected('O', board): 
                 print('Computer wins!')
-                goes_first=' '
+                time.sleep(5)
+                clean()
                 main()
             else:
                 continue
