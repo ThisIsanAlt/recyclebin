@@ -26,11 +26,10 @@ def insertpiece(board, location, symbol):
 
 def playermove(board):
     location = int(input('Where do you want to place your symbol?'))-1
-    if board[location] == ' ':
-        insertpiece(board, location, 'X')
-    else:
-        print('That\'s not a valid move! Try again!')
-        playermove(board)
+    while board[location] != ' ':
+            print('That\'s not a valid move! Try again!')
+            location = int(input('Where do you want to place your symbol?'))-1
+    insertpiece(board, location, 'X')
 
 def computermove(board):
     for i in [8,7,6,5,4,3,2,1,0]:
@@ -50,51 +49,47 @@ def windetected(symbol, board):
     else: return False
 
 def main():
-    print('Use your number pad to move like this:')
-    printboard(['01','02','03','04','05','06','07','08','09'])
-    print('To quit, just leave the input field empty when the program asks you who will go first.')
-    board=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
-    goes_first=input('Would you like to go first? y/n').lower()
-    if goes_first=='n':
-        while len(countempty(board)) > 0:
-            computermove(board)
-            if windetected('O', board):
-                print('Computer wins!')
-                time.sleep(5)
-                clean()
-                main()
-            printboard(board)
-            playermove(board)
-            if windetected('X', board): 
+    while True:
+        clean()
+        print('Use your number pad to move like this:')
+        printboard(['01','02','03','04','05','06','07','08','09'])
+        print('To quit, just leave the input field empty when the program asks you who will go first.')
+        board=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
+        goes_first=input('Would you like to go first? y/n ').lower()
+        if goes_first=='n':
+            while len(countempty(board)) > 0:
+                computermove(board)
+                if windetected('O', board):
+                    print('Computer wins!')
+                    time.sleep(5)
+                    goes_first=' '
                 printboard(board)
-                print('You win!')
-                time.sleep(5)
-                clean()
-                main()
-            else:
-                continue
-        main()
-    elif goes_first=='y':
-        while len(countempty(board)) > 0:
-            playermove(board)            
-            if windetected('X', board):
+                playermove(board)
+                if windetected('X', board): 
+                    printboard(board)
+                    print('You win!')
+                    time.sleep(5)
+                    goes_first=' '
+                else:
+                    continue
+        elif goes_first=='y':
+            while len(countempty(board)) > 0 and goes_first == 'y':
+                playermove(board)            
+                if windetected('X', board):
+                    printboard(board)
+                    print('You win!')
+                    time.sleep(5)
+                    goes_first=' '
+                computermove(board)
                 printboard(board)
-                print('You win!')
-                time.sleep(5)
-                clean()
-                main()
-            computermove(board)
-            printboard(board)
-            if windetected('O', board): 
-                print('Computer wins!')
-                time.sleep(5)
-                clean()
-                main()
-            else:
-                continue
-        main()
-    else:
-        sys.exit()
+                if windetected('O', board): 
+                    print('Computer wins!')
+                    time.sleep(5)
+                    goes_first=' '
+                else:
+                    continue
+        else:
+            sys.exit()
 
 if __name__ == '__main__':
     main()
