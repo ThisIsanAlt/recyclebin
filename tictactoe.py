@@ -1,3 +1,4 @@
+import sys
 
 def printboard(board):
     print(f'''|{board[0]}|{board[1]}|{board[2]}|
@@ -48,35 +49,37 @@ def main():
             computermove(board)
             if windetected('O', board):
                 print('Computer wins!')
+                goes_first=' '
                 main()
             printboard(board)
             playermove(board)
             printboard(board)
             if windetected('X', board): 
                 print('You win!')
+                goes_first=' '
                 main()
-                goes_first-' '
             else:
                 continue
         main()
     elif goes_first=='y':
         while len(countempty(board)) > 0:
             playermove(board)
-            printboard
+            printboard(board)
             if windetected('X', board):
                 print('You win!')
+                goes_first=' '
                 main()
             computermove(board)
-            
+            printboard(board)
             if windetected('O', board): 
                 print('Computer wins!')
-                main()
                 goes_first=' '
+                main()
             else:
                 continue
         main()
     else:
-        pass
+        sys.exit()
 
 if __name__ == '__main__':
     main()
