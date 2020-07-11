@@ -30,15 +30,21 @@ def playermove(board):
     insertpiece(board, location, 'X')
 
 def minimax(maximizing : bool, depth, board):
-    symbol = 'O' if maximizing else 'X'
-    print(f'Symbol is {symbol}')
-    print(f'Searching... Depth: {depth}')
-    time.sleep(2)
+    symbol = 'X' if maximizing else 'O'
+    opposing_symbol= 'X' if maximizing else 'O'
+    maximizing = False if maximizing else True
     newstate=board.copy()
-    for i in [8,7,6,5,4,3,2,1]:
+    for i in range(0, 9):
         if newstate[i]==' ':
             insertpiece(newstate, i, 'O')
-
+            if windetected(symbol, newstate):
+                return 1 if maximizing else -1
+            elif windetected(symbol, newstate):
+                return -1 if maximizing else 1
+            elif depth == 0:
+                return 0
+            else:
+                minimax(maximizing, depth-1, board)
 
 def computermove(board):
     for i in [8,7,6,5,4,3,2,1,0]:
