@@ -63,14 +63,16 @@ def main():
                 if windetected('O', board):
                     print('Computer wins!')
                     time.sleep(5)
-                    goes_first='not x'
+                    goes_first=' '
+                    break
                 printboard(board)
                 playermove(board)
                 if windetected('X', board): 
                     printboard(board)
                     print('You win!')
                     time.sleep(5)
-                    goes_first='not x'
+                    goes_first=' '
+                    break
                 else:
                     continue
         elif goes_first=='y':
@@ -80,13 +82,15 @@ def main():
                     printboard(board)
                     print('You win!')
                     time.sleep(5)
-                    goes_first='not y'
+                    goes_first=' '
+                    break
                 computermove(board)
                 printboard(board)
                 if windetected('O', board): 
                     print('Computer wins!')
                     time.sleep(5)
-                    goes_first='not y'
+                    goes_first=' '
+                    break
                 else:
                     continue
         else:
