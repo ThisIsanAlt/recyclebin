@@ -25,34 +25,24 @@ def insertpiece(board, location, symbol):
     board[location]=symbol
     return board
 
+def getbranches(symbol, board):
+    newstate=board.copy()
+    branches=[]
+    for i in range(0,10):
+        if newstate[i] == ' ':
+            insertpiece(newstate, i, symbol)
+            branches.append(newstate)
+    return branches
+
 def playermove(board):
     location = int(input('Where do you want to place your symbol?'))-1
+    while board[location] != ' ':
+        print('That\'s not a valid move! Please try again!')
+        location = int(input('Where do you want to place your symbol?'))-1
     insertpiece(board, location, 'X')
 
-def minimax(maximizing : bool, depth, board):
-    symbol = 'X' if maximizing else 'O'
-    opposing_symbol= 'X' if maximizing else 'O'
-    maximizing = False if maximizing else True
-    newstate=board.copy()
-    for i in range(0, 9):
-        if newstate[i]==' ':
-            insertpiece(newstate, i, 'O')
-            if windetected(symbol, newstate):
-                return 1 if maximizing else -1
-            elif windetected(symbol, newstate):
-                return -1 if maximizing else 1
-            elif depth == 0:
-                return 0
-            else:
-                minimax(maximizing, depth-1, board)
-
 def computermove(board):
-    for i in [8,7,6,5,4,3,2,1,0]:
-        if board[i]==' ':
-            insertpiece(board, i, 'O')
-            break
-        else:
-            continue
+    
 
 def windetected(symbol, board):
     if board[0] == board[1] and board[1] == board[2] and board[0] == symbol: return True
@@ -74,7 +64,7 @@ def main():
         board=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
         goes_first=input('Would you like to go first? y/n ').lower()
         if goes_first=='n':
-            while len(countempty(board)) > 0 and goes_first == 'n':
+            while goes_first == 'n':
                 computermove(board)
                 printboard(board)
                 if windetected('O', board):
@@ -89,11 +79,14 @@ def main():
                     time.sleep(5)
                     goes_first=' '
                     break
+                elif len(countempty(board))==0:
+                    print('It\'s a draw!')
                 else:
                     continue
         elif goes_first=='y':
-            while len(countempty(board)) > 0 and goes_first == 'y':
-                playermove(board)            
+            while goes_first == 'y':
+                playermove(board)
+                print('player has moved.')
                 if windetected('X', board):
                     printboard(board)
                     print('You win!')
@@ -101,12 +94,15 @@ def main():
                     goes_first=' '
                     break
                 computermove(board)
+                print('computer has moved.')
                 printboard(board)
                 if windetected('O', board): 
                     print('Computer wins!')
                     time.sleep(5)
                     goes_first=' '
                     break
+                elif len(countempty(board))==0:
+                    print('It\'s a draw!')
                 else:
                     continue
         else:
