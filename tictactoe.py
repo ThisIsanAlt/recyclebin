@@ -2,7 +2,7 @@ import sys
 import time
 import platform
 from os import system
-import random
+import math
 
 def clean():
     os_name = platform.system().lower()
@@ -32,11 +32,31 @@ def playermove(board):
             location = int(input('Where do you want to place your symbol?'))-1
     insertpiece(board, location, 'X')
 
+def minimax(maximizing : bool, depth, board):
+    symbol = 'O' if maximizing else 'X'
+    print(f'Symbol is {symbol}')
+    print(f'Searching... Depth: {depth}')
+    time.sleep(2)
+    for i in [8,7,6,5,4,3,2,1,0]:
+        newstate=board.copy()
+        newstate=insertpiece(newstate, i, symbol)    
+        if windetected(symbol, newstate):
+            print(f'Win dectected for {symbol}')
+            break
+        elif depth == 0:
+            print('Tie reached')
+            break
+        else:
+            maximizing = False if maximizing else True
+            minimax(maximizing, depth-1, board)
+    
+
 def computermove(board):
+    minimax(True, len(countempty(board)), board)
     for i in [8,7,6,5,4,3,2,1,0]:
         if board[i] == ' ':
             insertpiece(board, i, 'O')
-            break        
+            break
 
 def windetected(symbol, board):
     if board[0] == board[1] and board[1] == board[2] and board[0] == symbol: return True
@@ -60,12 +80,12 @@ def main():
         if goes_first=='n':
             while len(countempty(board)) > 0 and goes_first == 'n':
                 computermove(board)
+                printboard(board)
                 if windetected('O', board):
                     print('Computer wins!')
                     time.sleep(5)
                     goes_first=' '
                     break
-                printboard(board)
                 playermove(board)
                 if windetected('X', board): 
                     printboard(board)
