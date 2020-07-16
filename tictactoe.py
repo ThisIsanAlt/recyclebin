@@ -25,15 +25,6 @@ def insertpiece(board, location, symbol):
     board[location]=symbol
     return board
 
-def getbranches(symbol, board):
-    newstate=board.copy()
-    branches=[]
-    for i in range(0,10):
-        if newstate[i] == ' ':
-            insertpiece(newstate, i, symbol)
-            branches.append(newstate)
-    return branches
-
 def playermove(board):
     location = int(input('Where do you want to place your symbol?'))-1
     while board[location] != ' ':
@@ -41,8 +32,60 @@ def playermove(board):
         location = int(input('Where do you want to place your symbol?'))-1
     insertpiece(board, location, 'X')
 
-def computermove(board):
+def minimax(state, depth, initial, maximizing: bool):
+    if windetected(board):
+        return
+    #9 is the deepest depth, as depth gets deeper, depth number increases
+    elif depth is 9:
+        return 0
+
+    if maximizing:
+        swap to false
+    else
+        swap to true
+
     
+    #initalize your variables
+    idealMove = 0
+    #initalize your maxEval to very small value
+    maxEval = -100000000000000000000000
+    #inital yr minEval to very small value
+    minEval = 100000000000000000000
+
+
+    if maximizing:
+        #loop through each possible state so we can eval them
+        foreach spot in possiblySpot:
+            make copy of board
+            insertPiece into copy of board
+            eval = minimax(newState, inital, depth+1, maximizing is true)
+            
+            #if we are at inital depth and the current eval is greater than the previous max Eval, then set idealPath to this move
+            if depth == intial AND eval > maxEval:
+                idealMove = spot
+            #if currentEval is greater than the previous Best max eval, then make that max eval
+            maxEval = max(maxEval,eval)
+        
+        if depth is inital:
+            then return your ideal move
+        else:
+            just return the maxEval
+
+
+
+    else:
+        foreach spot in possiblySpot:
+            make copy of board
+            insertPiece into copy of board
+            eval = minimax(newState, inital, depth+1, maximizing is false)
+            
+            #if currentEval is greater than the previous Best Min eval. then make that min eval
+            miniEval = min(minEval, eval)
+        
+        just return the minEval
+
+def computermove(board):
+    insertpiece(board, minimax(board, len(countempty(board)), len(countempty(board)), False), 'O')
 
 def windetected(symbol, board):
     if board[0] == board[1] and board[1] == board[2] and board[0] == symbol: return True
