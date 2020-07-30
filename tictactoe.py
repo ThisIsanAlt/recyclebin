@@ -2,7 +2,7 @@ import sys
 import time
 import platform
 from os import system
-import random
+import math
 
 def clean():
     os_name = platform.system().lower()
@@ -28,15 +28,62 @@ def insertpiece(board, location, symbol):
 def playermove(board):
     location = int(input('Where do you want to place your symbol?'))-1
     while board[location] != ' ':
-            print('That\'s not a valid move! Try again!')
-            location = int(input('Where do you want to place your symbol?'))-1
+        print('That\'s not a valid move! Please try again!')
+        location = int(input('Where do you want to place your symbol?'))-1
     insertpiece(board, location, 'X')
 
+
+def minimax(board, depth, initial, maximizing: bool):
+    if windetected('X', board):
+        return -depth
+    elif windetected('O', board):
+        return depth
+    #9 is the deepest depth, as depth gets deeper, depth number increases
+    elif depth == 9:
+        return 0
+
+    maximizing = False if maximizing else True
+    
+    #initalize your variables
+    idealMove = 0
+    #initalize your maxEval to very small value
+    maxEval = -100000000000000000000000
+    #inital yr minEval to very small value
+    minEval = 100000000000000000000
+
+
+    if maximizing:
+        #loop through each possible state so we can eval them
+        for cell in range(0,8):
+            newState = board.copy()
+            insertpiece(board, cell, 'O')
+            eval = minimax(newState, depth+1, initial, maximizing)
+            
+            #if we are at inital depth and the current eval is greater than the previous max Eval, then set idealPath to this move
+            if depth == initial and eval > maxEval:
+                idealMove = cell
+            #if currentEval is greater than the previous Best max eval, then make that max eval
+            maxEval = max(maxEval,eval)
+
+            return maxEval
+
+
+
+    else:
+        for cell in range(0, 8):
+            newState = board.copy()
+            insertpiece(board, cell, 'X')
+            eval = minimax(newState, initial, depth+1, maximizing)
+            #if currentEval is greater than the previous Best Min eval. then make that min eval
+            minEval = min(minEval, eval)
+        
+        if depth == initial:
+            return idealMove
+        else:
+            return minEval
+
 def computermove(board):
-    for i in [8,7,6,5,4,3,2,1,0]:
-        if board[i] == ' ':
-            insertpiece(board, i, 'O')
-            break        
+    insertpiece(board, minimax(board, len(countempty(board)), len(countempty(board)), False), 'O')
 
 def windetected(symbol, board):
     if board[0] == board[1] and board[1] == board[2] and board[0] == symbol: return True
@@ -58,14 +105,14 @@ def main():
         board=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
         goes_first=input('Would you like to go first? y/n ').lower()
         if goes_first=='n':
-            while len(countempty(board)) > 0 and goes_first == 'n':
+            while goes_first == 'n':
                 computermove(board)
+                printboard(board)
                 if windetected('O', board):
                     print('Computer wins!')
                     time.sleep(5)
                     goes_first=' '
                     break
-                printboard(board)
                 playermove(board)
                 if windetected('X', board): 
                     printboard(board)
@@ -73,11 +120,14 @@ def main():
                     time.sleep(5)
                     goes_first=' '
                     break
+                elif len(countempty(board))==0:
+                    print('It\'s a draw!')
                 else:
                     continue
         elif goes_first=='y':
-            while len(countempty(board)) > 0 and goes_first == 'y':
-                playermove(board)            
+            while goes_first == 'y':
+                playermove(board)
+                print('player has moved.')
                 if windetected('X', board):
                     printboard(board)
                     print('You win!')
@@ -85,12 +135,15 @@ def main():
                     goes_first=' '
                     break
                 computermove(board)
+                print('computer has moved.')
                 printboard(board)
                 if windetected('O', board): 
                     print('Computer wins!')
                     time.sleep(5)
                     goes_first=' '
                     break
+                elif len(countempty(board))==0:
+                    print('It\'s a draw!')
                 else:
                     continue
         else:
