@@ -32,18 +32,17 @@ def playermove(board):
         location = int(input('Where do you want to place your symbol?'))-1
     insertpiece(board, location, 'X')
 
-def minimax(state, depth, initial, maximizing: bool):
-    if windetected(board):
-        return
+
+def minimax(board, depth, initial, maximizing: bool):
+    if windetected('X', board):
+        return -depth
+    elif windetected('O', board):
+        return depth
     #9 is the deepest depth, as depth gets deeper, depth number increases
-    elif depth is 9:
+    elif depth == 9:
         return 0
 
-    if maximizing:
-        swap to false
-    else
-        swap to true
-
+    maximizing = False if maximizing else True
     
     #initalize your variables
     idealMove = 0
@@ -55,34 +54,33 @@ def minimax(state, depth, initial, maximizing: bool):
 
     if maximizing:
         #loop through each possible state so we can eval them
-        foreach spot in possiblySpot:
-            make copy of board
-            insertPiece into copy of board
-            eval = minimax(newState, inital, depth+1, maximizing is true)
+        for cell in range(0,8):
+            newState = board.copy()
+            insertpiece(board, cell, 'O')
+            eval = minimax(newState, depth+1, initial, maximizing)
             
             #if we are at inital depth and the current eval is greater than the previous max Eval, then set idealPath to this move
-            if depth == intial AND eval > maxEval:
-                idealMove = spot
+            if depth == initial and eval > maxEval:
+                idealMove = cell
             #if currentEval is greater than the previous Best max eval, then make that max eval
             maxEval = max(maxEval,eval)
-        
-        if depth is inital:
-            then return your ideal move
-        else:
-            just return the maxEval
+
+            return maxEval
 
 
 
     else:
-        foreach spot in possiblySpot:
-            make copy of board
-            insertPiece into copy of board
-            eval = minimax(newState, inital, depth+1, maximizing is false)
-            
+        for cell in range(0, 8):
+            newState = board.copy()
+            insertpiece(board, cell, 'X')
+            eval = minimax(newState, initial, depth+1, maximizing)
             #if currentEval is greater than the previous Best Min eval. then make that min eval
-            miniEval = min(minEval, eval)
+            minEval = min(minEval, eval)
         
-        just return the minEval
+        if depth == initial:
+            return idealMove
+        else:
+            return minEval
 
 def computermove(board):
     insertpiece(board, minimax(board, len(countempty(board)), len(countempty(board)), False), 'O')
